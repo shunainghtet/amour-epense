@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Optional: Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Google Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .card-header {
+        background-color: #343a40;
+        color: white;
+      }
+      .table thead {
+        background-color: #343a40;
+        color: white;
+      }
+      .table th,
+      .table td {
+        vertical-align: middle;
+      }
+      .expense-item,
+      .income-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .expense-item i,
+      .income-item i {
+        margin-right: 10px;
+      }
+      .card-body {
+        padding: 20px;
+      }
+      .list-group-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .list-group-item i {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Expense Tracker</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container mt-5">
+      <!-- Monthly Overview -->
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Month</th>
+                <th>Expenses</th>
+                <th>Income</th>
+                <th>Balance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {{ current_user.username }} - {{ datetime.now().strftime('%B
+                  %Y') }}
+                </td>
+                <td>${{ total_expenses }}</td>
+                <td>${{ current_user.monthly_income }}</td>
+                <td>${{ balance }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Expense and Income List -->
+      <div class="row">
+        <!-- Expenses -->
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Expenses</h5>
+            </div>
+            <div class="card-body">
+              <div class="list-group">
+                {% for expense in expenses %}
+                <div class="expense-item list-group-item">
+                  <!-- Expense Category Icons -->
+                  {% if expense.category == 'Food' %}
+                  <i class="material-icons">restaurant</i> Food {% elif
+                  expense.category == 'Transport' %}
+                  <i class="material-icons">directions_car</i> Transport {% elif
+                  expense.category == 'Utilities' %}
+                  <i class="material-icons">lightbulb</i> Utilities {% elif
+                  expense.category == 'Entertainment' %}
+                  <i class="material-icons">movie</i> Entertainment {% elif
+                  expense.category == 'Salary' %}
+                  <i class="material-icons">attach_money</i> Salary {% endif %}
+                  <span>- ${{ expense.amount }}</span>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Income -->
+        <div class="col-md-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <h5 class="card-title mb-0">Income</h5>
+            </div>
+            <div class="card-body">
+              <div class="list-group">
+                <div class="income-item list-group-item">
+                  <i class="material-icons">wallet</i> Salary
+                  <span>- ${{ current_user.monthly_income }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Expense & Set Income Buttons -->
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <a href="{{ url_for('add_expense') }}" class="btn btn-primary btn-lg"
+            >Add Expense</a
+          >
+          <a href="{{ url_for('set_income') }}" class="btn btn-secondary btn-lg"
+            >Set Income</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS & Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

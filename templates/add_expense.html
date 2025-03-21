@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Expense</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Material Icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .card-header {
+        background-color: #007bff;
+        color: white;
+        font-size: 1.5rem;
+        text-align: center;
+        padding: 15px;
+        border-radius: 15px 15px 0 0;
+      }
+      .card-body {
+        padding: 30px;
+      }
+      .category-select .material-icons {
+        font-size: 40px;
+        margin-right: 10px;
+      }
+      .category-item {
+        cursor: pointer;
+        padding: 15px;
+        border: 2px solid #ddd;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        text-align: center;
+        display: inline-block;
+        transition: all 0.3s;
+        width: 100px;
+        height: 100px;
+      }
+      .category-item:hover {
+        background-color: #e9ecef;
+        transform: translateY(-5px);
+      }
+      .category-item.selected {
+        background-color: #007bff;
+        color: white;
+      }
+      .form-control {
+        border-radius: 10px;
+        box-shadow: none;
+        border: 1px solid #ddd;
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.1rem;
+        border-radius: 10px;
+      }
+      .back-btn {
+        margin-top: 20px;
+        font-size: 1.1rem;
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Expense Tracker</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('dashboard') }}"
+                >Back to Dashboard</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Add Expense Form -->
+    <div class="container">
+      <div class="card">
+        <div class="card-header">Add New Expense</div>
+        <div class="card-body">
+          <form method="POST" action="{{ url_for('add_expense') }}">
+            <!-- Expense Name -->
+            <div class="mb-3">
+              <label for="expense-name" class="form-label">Expense Name</label>
+              <input
+                type="text"
+                class="form-control"
+                id="name"
+                name="name"
+                required
+              />
+            </div>
+
+            <!-- Amount -->
+            <div class="mb-3">
+              <label for="amount" class="form-label">Amount</label>
+              <input
+                type="number"
+                class="form-control"
+                id="amount"
+                name="amount"
+                step="0.01"
+                required
+              />
+            </div>
+
+            <!-- Category Selection -->
+            <div class="mb-3">
+              <label for="category" class="form-label">Category</label>
+              <div
+                class="category-select d-flex justify-content-center flex-wrap"
+              >
+                <div
+                  class="category-item"
+                  data-category="Food"
+                  onclick="selectCategory(this, 'Food')"
+                >
+                  <i class="material-icons">restaurant</i>
+                  <div>Food</div>
+                </div>
+                <div
+                  class="category-item"
+                  data-category="Transport"
+                  onclick="selectCategory(this, 'Transport')"
+                >
+                  <i class="material-icons">directions_car</i>
+                  <div>Transport</div>
+                </div>
+                <div
+                  class="category-item"
+                  data-category="Utilities"
+                  onclick="selectCategory(this, 'Utilities')"
+                >
+                  <i class="material-icons">lightbulb</i>
+                  <div>Utilities</div>
+                </div>
+                <div
+                  class="category-item"
+                  data-category="Entertainment"
+                  onclick="selectCategory(this, 'Entertainment')"
+                >
+                  <i class="material-icons">movie</i>
+                  <div>Entertainment</div>
+                </div>
+                <div
+                  class="category-item"
+                  data-category="Salary"
+                  onclick="selectCategory(this, 'Salary')"
+                >
+                  <i class="material-icons">attach_money</i>
+                  <div>Salary</div>
+                </div>
+                <!-- Add more categories here -->
+              </div>
+              <input type="hidden" id="selected-category" name="category" />
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+              <button type="submit" class="btn btn-primary">Add Expense</button>
+            </div>
+          </form>
+          <a href="{{ url_for('dashboard') }}" class="btn btn-link back-btn"
+            >Back to Dashboard</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS & Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script>
+      function selectCategory(element, category) {
+        // Deselect all category items
+        let categoryItems = document.querySelectorAll(".category-item");
+        categoryItems.forEach((item) => {
+          item.classList.remove("selected");
+        });
+
+        // Select the clicked category
+        element.classList.add("selected");
+
+        // Set the selected category in the hidden input
+        document.getElementById("selected-category").value = category;
+      }
+    </script>
+  </body>
+</html>
